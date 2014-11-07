@@ -4,6 +4,7 @@ AddCSLuaFile( "cl_effects.lua" )
 AddCSLuaFile( "player_hud.lua" )
 AddCSLuaFile( "shared.lua" )
 AddCSLuaFile("player_meta.lua")
+AddCSLuaFile("main_menu.lua")
 
 --Fa:s
 AddCSLuaFile( "fas2_misc.lua" )
@@ -71,4 +72,13 @@ hook.Add( "Initialize", "wm_ini_hook",wm_init_hook );
 local function DisableNoclip( ply )
 	return false
 end
-hook.Add( "PlayerNoClip", "DisableNoclip", DisableNoclip )
+hook.Add( "PlayerNoClip", "wm_disablenoclip", DisableNoclip )
+
+/*---------------------------------------------------------
+   Name: KeyPress( )
+   Desc: Called whenever a player pressed a key included within the IN keys.
+   http://wiki.garrysmod.com/page/Enums/IN
+---------------------------------------------------------*/
+function GM:KeyPress( ply, key )
+
+end

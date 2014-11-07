@@ -71,6 +71,39 @@ function ENT:Initialize()
 	end)
 end
 
+function ENT:Die()
+	--Remove the miner
+		local effectdata = EffectData()
+		effectdata:SetOrigin( self:GetPos() + Vector(0,0,5))
+		effectdata:SetStart( self:GetPos() + Vector(0,0,5))
+		effectdata:SetScale( 1 )
+		util.Effect( "Explosion", effectdata )
+		util.BlastDamage( self, self, self:GetPos(), 60, 15 )
+	
+		--Stop sounds
+		timer.Simple(0.3,function()
+			if !IsValid(self) then return end
+			for k,v in pairs(player.GetAll() ) do
+				if IsValid(v) then 
+					if(v:GetPos():Distance(self:GetPos())<500) then
+						v:ConCommand( "stopsound" )
+					end
+				end
+			end
+			
+			timer.Remove(timerA)
+			timer.Remove(timerB)
+			self.Owner:SetScrapMiner(nil)
+			self:Remove()
+		end)
+end
+
+function ENT:Think()
+	if self:Health() < 0 then
+		self:Die()
+	end
+end
+
 function ENT:OnTakeDamage( dmginfo )
 	if self:Health() > 0 then
 		self:SetHealth(self:Health()-dmginfo:GetDamage())
@@ -81,28 +114,7 @@ function ENT:OnTakeDamage( dmginfo )
 			lastTimeAlarm = CurTime()
 		end
 	else
-		--Remove the miner
-		local effectdata = EffectData()
-		effectdata:SetOrigin( self:GetPos() + Vector(0,0,5))
-		effectdata:SetStart( self:GetPos() + Vector(0,0,5))
-		effectdata:SetScale( 1 )
-		util.Effect( "Explosion", effectdata )
-		util.BlastDamage( self, self, self:GetPos(), 60, 15 )
-	
-		--Stop sounds
-		if !IsValid(self) then return end
-		for k,v in pairs(player.GetAll() ) do
-			if IsValid(v) then 
-				if(v:GetPos():Distance(self:GetPos())<500) then
-					v:ConCommand( "stopsound" )
-				end
-			end
-		end
-	
-		timer.Remove(timerA)
-		timer.Remove(timerB)
-		self.Owner:SetScrapMiner(nil)
-		self:Remove()
+		self:Die()
 	end
 end
 
@@ -112,22 +124,6 @@ end
 
 function ENT:Use(activator, caller)
 	if (activator:IsPlayer() and activator == self.Owner) then
-		local effectdata = EffectData()
-		effectdata:SetOrigin( self:GetPos() + Vector(0,0,5))
-		effectdata:SetStart( self:GetPos() + Vector(0,0,5))
-		effectdata:SetScale( 1 )
-		util.Effect( "Explosion", effectdata )
-		
-		if !IsValid(self) then return end
-		for k,v in pairs(player.GetAll() ) do
-			if IsValid(v) then 
-				if(v:GetPos():Distance(self:GetPos())<500) then
-					v:ConCommand( "stopsound" )
-				end
-			end
-		end
-		
-		--self:EmitSound( Sound("physics/metal/metal_box_break1.wav"), SNDLVL_75dB, 100, 0.8, CHAN_STATIC )
-		self:Remove()
+		self:Die()
 	end
 end
