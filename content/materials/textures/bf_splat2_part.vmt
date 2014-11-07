@@ -1,0 +1,7 @@
+"UnlitGeneric" 
+{ 
+	$basetexture "textures/bf_splat2_part"
+	$translucent 1
+	$vertexcolor 1
+	$vertexalpha 1
+}

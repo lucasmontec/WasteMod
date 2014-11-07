@@ -1,0 +1,15 @@
+"wastemod"
+{
+	"title"		"Waste Mod"
+	"base" "base"
+	"maps"		"^wm_"
+	"menusystem"	"1"
+
+	"author_name"	"Zombie"
+	"author_email"	""
+	"author_url"	""
+	
+	"icon"		""
+	"info"		"Wasteland fun"
+	"hide"		""
+}
