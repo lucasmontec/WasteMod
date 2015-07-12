@@ -6,15 +6,6 @@ AddCSLuaFile( "shared.lua" )
 AddCSLuaFile("player_meta.lua")
 AddCSLuaFile("main_menu.lua")
 
---Fa:s
-AddCSLuaFile( "fas2_misc.lua" )
-AddCSLuaFile( "fas2_unoffrifles_sounds.lua" )
-AddCSLuaFile("fas2_shared.lua")
-AddCSLuaFile("client/fas2_clientmenu.lua")
-include( 'fas2_misc.lua' )
-include( 'fas2_unoffrifles_sounds.lua' )
-include( 'fas2_shared.lua' )
-
 include( 'shared.lua' )
 
 Msg("WASTEMOD: Resources loaded!")
@@ -40,8 +31,7 @@ end
 ---------------------------------------------------------*/
 function GM:PlayerLoadout( pl )
 	
-	pl:Give( "fas2_machete" )
-	pl:Give( "fas2_m1911" )
+	pl:Give( "proto_pistol" )
 	pl:Give( "wm_scrapminer_placer" )
 	
 end

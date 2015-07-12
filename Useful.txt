@@ -1,0 +1,10 @@
+Model names:
+	Shrapnel:
+		models/props_c17/canisterchunk01b.mdl
+		models/props_c17/canisterchunk01c.mdl
+		models/props_c17/canisterchunk01f.mdl
+		models/props_c17/canisterchunk01h.mdl
+		models/props_c17/canisterchunk01i.mdl
+		
+	Bullet:
+		models/items/ar2_grenade.mdl

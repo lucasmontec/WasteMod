@@ -18,6 +18,8 @@ function ENT:Initialize()
     self.Entity:PhysicsInit(SOLID_VPHYSICS)
 	self.Entity:SetMoveType(MOVETYPE_NONE)
 	self.Entity:SetSolid(SOLID_VPHYSICS)
+	self:SetRenderMode( RENDERMODE_NORMAL )
+	
     self.Entity:SetName("Waste Miner")
 	
 	self.Entity:SetHealth(maxHealth)
@@ -36,7 +38,7 @@ function ENT:Initialize()
 	local scrapFound0 = Sound( "physics/concrete/concrete_break3.wav" )
 	local scrapFound1 = Sound( "ambient/energy/newspark07.wav" )
 	
-	--self.Model:SetAnimation( AE_THUMPER_THUMP )
+	//self.Model:SetAnimation( AE_THUMPER_THUMP )
 	self:EmitSound( placeSound, SNDLVL_100dB, 100, 1, CHAN_STATIC )
 	
 	--Constant sound
@@ -123,7 +125,11 @@ function ENT:Touch( entidadeTocada )
 end
 
 function ENT:Use(activator, caller)
-	if (activator:IsPlayer() and activator == self.Owner) then
-		self:Die()
+	if activator:IsPlayer() then
+		if activator == self.Owner then
+			self:Die()
+		else
+			self:TakeDamage( math.random(1,2), activator, activator )
+		end
 	end
 end

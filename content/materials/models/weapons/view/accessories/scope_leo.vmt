@@ -1,6 +1,0 @@
-"UnlitGeneric"
-{
-	"$basetexture" "sprites/scope_leo"
-	"$translucent"		"1"
-	"$model" "1"
-}
