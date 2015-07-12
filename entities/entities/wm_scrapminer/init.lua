@@ -18,6 +18,8 @@ function ENT:Initialize()
     self.Entity:PhysicsInit(SOLID_VPHYSICS)
 	self.Entity:SetMoveType(MOVETYPE_NONE)
 	self.Entity:SetSolid(SOLID_VPHYSICS)
+	self:SetRenderMode( RENDERMODE_NORMAL )
+	
     self.Entity:SetName("Waste Miner")
 	
 	self.Entity:SetHealth(maxHealth)
@@ -36,7 +38,7 @@ function ENT:Initialize()
 	local scrapFound0 = Sound( "physics/concrete/concrete_break3.wav" )
 	local scrapFound1 = Sound( "ambient/energy/newspark07.wav" )
 	
-	--self.Model:SetAnimation( AE_THUMPER_THUMP )
+	//self.Model:SetAnimation( AE_THUMPER_THUMP )
 	self:EmitSound( placeSound, SNDLVL_100dB, 100, 1, CHAN_STATIC )
 	
 	--Constant sound
@@ -71,6 +73,39 @@ function ENT:Initialize()
 	end)
 end
 
+function ENT:Die()
+	--Remove the miner
+		local effectdata = EffectData()
+		effectdata:SetOrigin( self:GetPos() + Vector(0,0,5))
+		effectdata:SetStart( self:GetPos() + Vector(0,0,5))
+		effectdata:SetScale( 1 )
+		util.Effect( "Explosion", effectdata )
+		util.BlastDamage( self, self, self:GetPos(), 60, 15 )
+	
+		--Stop sounds
+		timer.Simple(0.3,function()
+			if !IsValid(self) then return end
+			for k,v in pairs(player.GetAll() ) do
+				if IsValid(v) then 
+					if(v:GetPos():Distance(self:GetPos())<500) then
+						v:ConCommand( "stopsound" )
+					end
+				end
+			end
+			
+			timer.Remove(timerA)
+			timer.Remove(timerB)
+			self.Owner:SetScrapMiner(nil)
+			self:Remove()
+		end)
+end
+
+function ENT:Think()
+	if self:Health() < 0 then
+		self:Die()
+	end
+end
+
 function ENT:OnTakeDamage( dmginfo )
 	if self:Health() > 0 then
 		self:SetHealth(self:Health()-dmginfo:GetDamage())
@@ -81,28 +116,7 @@ function ENT:OnTakeDamage( dmginfo )
 			lastTimeAlarm = CurTime()
 		end
 	else
-		--Remove the miner
-		local effectdata = EffectData()
-		effectdata:SetOrigin( self:GetPos() + Vector(0,0,5))
-		effectdata:SetStart( self:GetPos() + Vector(0,0,5))
-		effectdata:SetScale( 1 )
-		util.Effect( "Explosion", effectdata )
-		util.BlastDamage( self, self, self:GetPos(), 60, 15 )
-	
-		--Stop sounds
-		if !IsValid(self) then return end
-		for k,v in pairs(player.GetAll() ) do
-			if IsValid(v) then 
-				if(v:GetPos():Distance(self:GetPos())<500) then
-					v:ConCommand( "stopsound" )
-				end
-			end
-		end
-	
-		timer.Remove(timerA)
-		timer.Remove(timerB)
-		self.Owner:SetScrapMiner(nil)
-		self:Remove()
+		self:Die()
 	end
 end
 
@@ -111,23 +125,11 @@ function ENT:Touch( entidadeTocada )
 end
 
 function ENT:Use(activator, caller)
-	if (activator:IsPlayer() and activator == self.Owner) then
-		local effectdata = EffectData()
-		effectdata:SetOrigin( self:GetPos() + Vector(0,0,5))
-		effectdata:SetStart( self:GetPos() + Vector(0,0,5))
-		effectdata:SetScale( 1 )
-		util.Effect( "Explosion", effectdata )
-		
-		if !IsValid(self) then return end
-		for k,v in pairs(player.GetAll() ) do
-			if IsValid(v) then 
-				if(v:GetPos():Distance(self:GetPos())<500) then
-					v:ConCommand( "stopsound" )
-				end
-			end
+	if activator:IsPlayer() then
+		if activator == self.Owner then
+			self:Die()
+		else
+			self:TakeDamage( math.random(1,2), activator, activator )
 		end
-		
-		--self:EmitSound( Sound("physics/metal/metal_box_break1.wav"), SNDLVL_75dB, 100, 0.8, CHAN_STATIC )
-		self:Remove()
 	end
 end
