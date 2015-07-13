@@ -27,6 +27,13 @@ function Player:RemoveScrap(amount)
 	self:AddScrap(-amount)
 end
 
+--Can Use scrap amount for the player?
+function Player:CanPayScrap(amount)
+	local canPay = self:GetScrap()-amount >= 0
+
+	return canPay
+end
+
  /*
 	SCRAP MINER FUNCTIONS
  */

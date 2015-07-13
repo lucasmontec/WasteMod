@@ -74,6 +74,13 @@ function ENT:Explode()
 	end
 end
 
+function ENT:Set()
+	//Explosive timer
+	if self.explode_timer and self.explosive then
+		timer.Create( "BulletExpTimer_"..CurTime()..math.Rand(0,10000), self.explode_timer_time, 1, function() if IsValid(self) then self:Explode() end end )
+	end
+end
+
 /*---------------------------------------------------------
    Name: Initialize
 ---------------------------------------------------------*/
@@ -85,11 +92,6 @@ function ENT:Initialize()
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS ) 
 	//self:SetCollisionGroup( COLLISION_GROUP_INTERACTIVE )
-	
-	//Explosive timer
-	if self.explode_timer and self.explosive then
-		timer.Create( "BulletExpTimer_"..CurTime()..math.Rand(0,10000), self.explode_timer_time, 1, function() if IsValid(self) then self:Explode() end end )
-	end
 	
 	//Self remove
 	timer.Create( "BulletRemTimer_"..CurTime()..math.Rand(0,10000), 20, 1, function() if IsValid(self) and SERVER then self:Remove() end end )

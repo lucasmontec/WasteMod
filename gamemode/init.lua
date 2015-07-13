@@ -13,7 +13,7 @@ Msg("WASTEMOD: Resources loaded!")
 // Serverside only stuff goes here
 
 //VARIABLES
-INITIAL_SCRAP_ON_INITIAL_SPAWN = 100
+INITIAL_SCRAP_ON_INITIAL_SPAWN = 10000
 
 /*---------------------------------------------------------
    Name: gamemode:PlayerLoadout( )
@@ -42,6 +42,7 @@ end
 ---------------------------------------------------------*/
 function wm_playerdeath_hook( ply, inflictor, attacker )
 	--Drop guns
+	ply:SetScrap(INITIAL_SCRAP_ON_INITIAL_SPAWN)
 end
 hook.Add( "PlayerDeath", "wm_pdeath_hook", wm_playerdeath_hook );
 
